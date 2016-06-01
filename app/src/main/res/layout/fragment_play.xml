@@ -1,0 +1,49 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    >
+
+    <com.vipheyue.livegame.neliveplayer.NEVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+
+    <LinearLayout
+        android:id="@+id/buffering_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:text="@string/buffering"
+            android:textColor="#FFFFFFFF"
+            android:textSize="13dp" />
+
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Large"
+            android:layout_width="50dip"
+            android:layout_height="50dip" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/audio_remind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:layout_centerInParent="true"
+        android:src="@drawable/audio_remind" />
+
+</FrameLayout>

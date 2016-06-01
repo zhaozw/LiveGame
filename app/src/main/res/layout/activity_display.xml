@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    tools:context="com.vipheyue.livegame.activity.DisplayActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="欢迎进入xxxxx"
+        android:textColor="#FFFFFF" />
+
+    <fragment
+        android:id="@+id/display_fragmet"
+        android:name="com.vipheyue.livegame.fragment.PlayFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        tools:layout="@layout/fragment_play"></fragment>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_direction_dong"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="2dp"
+                            android:background="@drawable/main_directionbg_dong"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_dong_total"
+                            style="@style/iv_direction_style"
+                            android:text="总下注: 0元" />
+
+                        <TextView
+                            android:id="@+id/tv_dong_Mytotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_dong_total"
+                            android:text="我下注: 0元"
+                            android:textColor="@android:color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_direction_nan"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/main_directionbg_nan"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_nan_total"
+                            style="@style/iv_direction_style"
+                            android:layout_alignParentRight="true"
+                            android:text="总下注: 0元" />
+
+                        <TextView
+                            android:id="@+id/tv_nan_Mytotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/tv_nan_total"
+                            android:text="我下注: 0元"
+                            android:textColor="@android:color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_direction_xi"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/main_directionbg_xi"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_xi_total"
+                            style="@style/iv_direction_style"
+                            android:text="总下注: 0元" />
+
+                        <TextView
+                            android:id="@+id/tv_xi_Mytotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_xi_total"
+                            android:text="我下注: 0元"
+                            android:textColor="@android:color/white" />
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_direction_bei"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/main_directionbg_bei"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_bei_total"
+                            style="@style/iv_direction_style"
+                            android:layout_alignParentRight="true"
+                            android:text="总下注: 0元" />
+
+                        <TextView
+                            android:id="@+id/tv_bei_Mytotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/tv_bei_total"
+                            android:text="我下注: 0元"
+                            android:textColor="@android:color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/main_time_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="下注时间"
+                    android:textColor="#C39BAE"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="15"
+                    android:textColor="#C39BAE"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="#E37844"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/main_amount_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/main_amount_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/main_chip_10" />
+
+                <ImageView
+                    android:id="@+id/main_amount_100"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/main_amount_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/main_chip_100" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/main_amount_50"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/main_amount_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/main_chip_50" />
+
+                <ImageView
+                    android:id="@+id/main_amount_500"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/main_amount_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/main_chip_500" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/main_userinfo_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昵称:江南金库"
+                android:textColor="#C5A0AA" />
+
+            <TextView
+                android:id="@+id/tv_userId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID:123456789"
+                android:textColor="#C5A0AA" />
+
+            <TextView
+                android:id="@+id/tv_userMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="财富:12345678"
+                android:textColor="#C5A0AA" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#EAE473">
+
+        <TextView
+            android:id="@+id/tv_bottom_recharge"
+            style="@style/main_bottom_style"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="充值"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_bottom_exchange"
+            style="@style/main_bottom_style"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="兑换"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_bottom_presented"
+            style="@style/main_bottom_style"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="赠送"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_bottom_out"
+            style="@style/main_bottom_style"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="退出"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

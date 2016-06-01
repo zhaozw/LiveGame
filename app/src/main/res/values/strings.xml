@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">直播猜猜猜</string>
+    <string name="action_settings">Settings</string>
+    <color name="font_white">#ffffffff</color>
+    <color name="font_white_disable">#7fffffff</color>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_msg_center">MsgCenterActivity</string>
+    <string name="buffering">缓冲中</string>
+
+    <string name="mediacontroller_play_pause">Play/Pause</string>
+    <string name="_drawable_mediacontroller_mute02">\@drawable/mediacontroller_mute02</string>
+
+    <string name="player_option">播 放 选 项</string>
+</resources>
