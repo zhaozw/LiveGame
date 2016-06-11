@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="pldroid_streaming_white">#fff</color>
+    <color name="pldroid_streaming_red">#f00</color>
+    <color name="pldroid_streaming_yellow">#FFFF00</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="banner_border">#999999</color>
+    <color name="splash_bg">#00B7EE</color>
+    <color name="private_chat">#FF0000</color>
+    <color name="public_chat">#000000</color>
+    <color name="chat_background">#dddddd</color>
+    <color name="replay_bottom_bar">#66666666</color>
+    <color name="live_play_bar">#44666666</color>
+
+</resources>
