@@ -2,7 +2,6 @@ package com.vipheyue.livegame.cc.com.bokecc.live.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -18,8 +17,8 @@ import com.bokecc.sdk.mobile.live.util.HttpUtil;
 import com.vipheyue.livegame.R;
 import com.vipheyue.livegame.cc.com.bokecc.live.adapter.MyLoginFragmentAdapter;
 import com.vipheyue.livegame.cc.com.bokecc.live.config.Config;
-import com.vipheyue.livegame.cc.com.bokecc.live.fragment.LoginFragment;
 import com.vipheyue.livegame.cc.com.example.qr_codescan.MipcaActivityCapture;
+import com.vipheyue.livegame.fragment.PlayCCFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,16 +97,14 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener,
 					return;
 				}
 				getLiveIds(map);
-				
 				List<Fragment> list = getSupportFragmentManager().getFragments();
 				for (int i =0; i<list.size(); i++) {
-					LoginFragment fragment = (LoginFragment) list.get(i);
-					Handler handler = fragment.getHander();
+					PlayCCFragment fragment = (PlayCCFragment) list.get(i);
+//					Handler handler = fragment.getHander();
 					Message msg = new Message();
 					msg.what = 0;
 					msg.obj = map;
-					
-					handler.sendMessage(msg);
+//					handler.sendMessage(msg);
 				}
 			}
 			break;
@@ -152,12 +149,12 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener,
 		
 		List<Fragment> list = getSupportFragmentManager().getFragments();
 		for (int i =0; i<list.size(); i++) {
-			LoginFragment fragment = (LoginFragment) list.get(i);
-			Handler handler = fragment.getHander();
+			PlayCCFragment fragment = (PlayCCFragment) list.get(i);
+//			Handler handler = fragment.getHander();
 			Message msgLiveId = new Message();
 			msgLiveId.what = 1;
 			msgLiveId.obj = liveIds;
-			handler.sendMessage(msgLiveId);
+//			handler.sendMessage(msgLiveId);
 		}
 	}
 

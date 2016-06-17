@@ -1,23 +1,19 @@
-package com.vipheyue.livegame.cc.com.bokecc.live.demo;
+package com.vipheyue.livegame.fragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -45,7 +41,7 @@ import java.util.List;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.Callback, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnCompletionListener {
+public class PlayCCFragment extends Fragment implements SurfaceHolder.Callback, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnCompletionListener {
 
     private IjkMediaPlayer player;
     private SurfaceView sv;
@@ -63,8 +59,25 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
     private final int USER_COUNT = 20;
     private final int FINISH = 40;
     private final int KICK_OUT = -1;
+    private View view;
 
+    public PlayCCFragment() {
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.room_live, container, false);
+
+        wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        init();
+        initPagerItemView();
+        initPlayer();
+        initDwLive();
+        initRoomShow();
+        HttpUtil.LOG_LEVEL = HttpUtil.HttpLogLevel.DETAIL;
+        return view;
+    }
     private boolean isStop = false;
     private BarrageLayout mBarrageLayout;
 
@@ -123,44 +136,22 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
     private List<View> pagerViewList = new ArrayList<View>();
 
     private void initPagerItemView() {
-        LayoutInflater inflater = LayoutInflater.from(this);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         View picView = inflater.inflate(R.layout.pic_layout, null);
         pagerViewList.add(picView);
         initPicLayout(picView);
     }
-
     private void initPicLayout(View view) {
         docView = (DocView) view.findViewById(R.id.live_docView);
     }
 
     private void initLvQa() {
-        qaAdapter = new MyQAListViewAdapter(this, viewer, qaMap);
+        qaAdapter = new MyQAListViewAdapter(getActivity(), viewer, qaMap);
     }
 
     private Viewer viewer;
     private WindowManager wm;
-    private String chatStr;
-    private static final String TAG = "LiveRoomActivity";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.room_live);
-
-        wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        chatStr = bundle.getString("chat");
-        Log.d(TAG, "onCreate:............. " + chatStr);
-        init();
-        initPagerItemView();
-        initPlayer();
-        initDwLive();
-        initRoomShow();
-        HttpUtil.LOG_LEVEL = HttpUtil.HttpLogLevel.DETAIL;
-    }
 
     private void initRoomShow() {
         initLvQa();
@@ -175,19 +166,19 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
     private TextView tvPlayMsg;
 
     private void init() {
-        tvPlayMsg = (TextView) findViewById(R.id.tv_play_msg);
-        mBarrageLayout = (BarrageLayout) findViewById(R.id.bl_barrage);
-        rlPlay = (RelativeLayout) findViewById(R.id.rl_play);
+        tvPlayMsg = (TextView) view.findViewById(R.id.tv_play_msg);
+        mBarrageLayout = (BarrageLayout) view.findViewById(R.id.bl_barrage);
+        rlPlay = (RelativeLayout) view.findViewById(R.id.rl_play);
         setRelativeLayoutPlay(true);
         rlPlay.setClickable(true);
-        sv = (SurfaceView) findViewById(R.id.sv);
+        sv = (SurfaceView) view.findViewById(R.id.sv);
         holder = sv.getHolder();
         holder.addCallback(this);
     }
 
 
     private boolean isPortrait() {
-        int mOrientation = getApplicationContext().getResources().getConfiguration().orientation;
+        int mOrientation = getActivity().getApplicationContext().getResources().getConfiguration().orientation;
         if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             return false;
         } else {
@@ -195,8 +186,7 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
         }
     }
 
-
-      private void initPlayer() {
+    private void initPlayer() {
         player = new IjkMediaPlayer();
         player.setOnPreparedListener(this);
         player.setOnVideoSizeChangedListener(this);
@@ -205,26 +195,14 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
         player.setOnCompletionListener(this);
     }
 
+
+
     @Override
-    protected void onDestroy() {
+    public void onDestroyView() {
         dwLive.stop();
-        super.onDestroy();
+        super.onDestroyView();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -253,7 +231,6 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
         tvPlayMsg.setVisibility(View.GONE);
         player.start();
     }
-
     @Override
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
         Log.i("demo", "onVideoSizeChanged" + "width" + width + "height" + height);
@@ -316,8 +293,6 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         return params;
     }
-
-
     @Override
     public boolean onError(IMediaPlayer mp, int what, int extra) {
         Log.i("demo", "player onError");
@@ -386,6 +361,7 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
             handler.sendMessage(handlerMsg);
         }
 
+
         @Override
         public void onUserCountMessage(int count) {
             Message msg = new Message();
@@ -422,6 +398,7 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
             handler.sendMessage(handlerMsg);
         }
 
+
         @Override
         public void onKickOut() {
             Message kickOutMsg = new Message();
@@ -440,7 +417,7 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
     private boolean isOnPause = false;
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         qaMap.clear();
         dwLive.stop();
         isOnPause = true;
@@ -448,13 +425,14 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (isOnPause) {
             dwLive.start(holder);
             isOnPause = false;
         }
     }
+
 
     @Override
     public void onCompletion(IMediaPlayer mp) {
@@ -469,14 +447,14 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setRelativeLayoutPlay(true);
             mBarrageLayout.stop();
             mBarrageLayout.setVisibility(View.GONE);
 
 
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setRelativeLayoutPlay(false);
             mBarrageLayout.start();
             mBarrageLayout.setVisibility(View.VISIBLE);
@@ -484,14 +462,7 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
         sv.setLayoutParams(getScreenSizeParams());
     }
 
-    @Override
-    public void onBackPressed() {
-        if (isPortrait()) {
-            super.onBackPressed();
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-    }
+
 
     private void setRelativeLayoutPlay(boolean isPortraitOrien) {
         int width = wm.getDefaultDisplay().getWidth();
@@ -504,4 +475,7 @@ public class LiveRoomActivity extends FragmentActivity implements SurfaceHolder.
         }
         rlPlay.setLayoutParams(layoutParams);
     }
+
+
+
 }

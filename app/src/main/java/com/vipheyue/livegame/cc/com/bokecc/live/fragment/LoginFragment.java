@@ -79,13 +79,13 @@ public class LoginFragment extends Fragment {
 		@Override
 		public void onLogin(TemplateInfo templateInfo) {
 			Intent intent = new Intent(getActivity(), LiveReplayActivity.class);
-			
+
 			Bundle bundle = new Bundle();
 			bundle.putString("chat", templateInfo.getChatView());
 			bundle.putString("pdf", templateInfo.getPdfView());
 			bundle.putString("qa", templateInfo.getQaView());
 			intent.putExtras(bundle);
-			
+
 			startActivity(intent);
 		}
 		

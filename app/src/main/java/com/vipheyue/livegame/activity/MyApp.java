@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.vipheyue.livegame.bean.MyUser;
 
+import java.util.logging.Logger;
+
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
 

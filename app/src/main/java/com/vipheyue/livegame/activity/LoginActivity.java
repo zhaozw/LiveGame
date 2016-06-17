@@ -10,6 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bokecc.sdk.mobile.live.DWLive;
+import com.bokecc.sdk.mobile.live.DWLiveLoginListener;
+import com.bokecc.sdk.mobile.live.Exception.DWLiveException;
+import com.bokecc.sdk.mobile.live.pojo.RoomInfo;
+import com.bokecc.sdk.mobile.live.pojo.TemplateInfo;
+import com.bokecc.sdk.mobile.live.pojo.Viewer;
 import com.vipheyue.livegame.R;
 import com.vipheyue.livegame.bean.MyBmobInstallation;
 import com.vipheyue.livegame.bean.MyUser;
@@ -43,6 +49,25 @@ public class LoginActivity extends AppCompatActivity {
     TextView tv_register;
     private int requestCode = 5555;
 
+
+    private DWLive dwLive = DWLive.getInstance();
+    private DWLiveLoginListener dwLiveLoginListener = new DWLiveLoginListener() {
+
+        @Override
+        public void onLogin(TemplateInfo info, Viewer viewer, RoomInfo roomInfo) {
+            startActivity(new Intent(LoginActivity.this,DisplayCCActivity.class));
+            finish();
+        }
+
+        @Override
+        public void onException(DWLiveException exception) {
+            Toast.makeText(LoginActivity.this, "exception", Toast.LENGTH_SHORT).show();
+        }
+    };
+    private void initCC() {
+        dwLive.setDWLiveLoginParams(dwLiveLoginListener, "F3C902A33FFD4BB3", "3F5A7B0FDE82736A9C33DC5901307461", "xxxx", "xxxx");
+        dwLive.startLogin();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 //        CrashHandler.upCrashInfo(this);
         MyUser bmobUser = BmobUser.getCurrentUser(this,MyUser.class);//r
         if(bmobUser != null){ //缓存用户对象不为空时
-            startActivity(new Intent(this,DisplayActivity.class));
-            finish();
+            initCC();
         }
 
         et_phone.setText( SharePreferencesUtil.getSpString("userName", "", this));
@@ -87,11 +111,12 @@ public class LoginActivity extends AppCompatActivity {
             public void done(MyUser user, BmobException e) {
                 // TODO Auto-generated method stub
                 if(user!=null){
+                    Toast.makeText(LoginActivity.this, "bmob login success", Toast.LENGTH_SHORT).show();
+                    initCC();
                     SharePreferencesUtil.putSpString("userName",et_phone.getText().toString().trim(),LoginActivity.this);
                     SharePreferencesUtil.putSpString("userPassWord",et_password.getText().toString().trim(),LoginActivity.this);
                     upDateInstallation();
-                    startActivity(new Intent(LoginActivity.this,DisplayActivity.class));
-                    finish();
+
                 }else{
                     Toast.makeText(LoginActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();

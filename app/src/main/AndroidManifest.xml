@@ -35,9 +35,11 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="cn.bmob.permission.push" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
+
     <application
         android:name=".activity.MyApp"
         android:allowBackup="true"
@@ -45,9 +47,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity"></activity>
-        <activity android:name=".activity.DisplayActivity"></activity>
-        <activity android:name=".activity.GetSMSActivity"></activity>
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.DisplayActivity" />
+        <activity android:name=".activity.GetSMSActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,13 +62,13 @@
         <activity
             android:name=".neliveplayer.NEWelcomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 播放设置页面activity，默认竖屏模式 -->
         <activity
             android:name=".neliveplayer.NEMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <!-- 播放页面activity，默认横屏模式 -->
         <activity
@@ -74,32 +76,25 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.TestActivity">
-
-        </activity>
-
-
+        <activity android:name=".activity.TestActivity"></activity>
         <activity
-            android:name="com.vipheyue.livegame.cc.com.bokecc.live.demo.LoginActivity"
+            android:name=".cc.com.bokecc.live.demo.LoginActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme" >
-        </activity>
-
+            android:theme="@style/AppBaseTheme"></activity>
         <activity
-            android:name="com.vipheyue.livegame.cc.com.bokecc.live.demo.LiveRoomActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.vipheyue.livegame.cc.com.bokecc.live.demo.SplashActivity"
+            android:name=".cc.com.bokecc.live.demo.LiveRoomActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <activity
+            android:name=".cc.com.bokecc.live.demo.SplashActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -107,17 +102,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.vipheyue.livegame.cc.com.bokecc.live.demo.LiveReplayActivity"
+            android:name=".cc.com.bokecc.live.demo.LiveReplayActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.vipheyue.livegame.cc.com.example.qr_codescan.MipcaActivityCapture"
+            android:name=".cc.com.example.qr_codescan.MipcaActivityCapture"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity android:name=".activity.DisplayCCActivity"></activity>
     </application>
 
 </manifest>
