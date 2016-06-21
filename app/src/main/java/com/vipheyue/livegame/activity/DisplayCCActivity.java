@@ -30,7 +30,6 @@ import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
 
-
 public class DisplayCCActivity extends AppCompatActivity {
 
 
@@ -110,12 +109,11 @@ public class DisplayCCActivity extends AppCompatActivity {
     }
 
 
-
     private void initView() {
-        MyUser userInfo = BmobUser.getCurrentUser(this,MyUser.class);
-        tv_userName.setText("昵称:"+userInfo.getUsername());
-        tv_userId.setText("ID:"+userInfo.getObjectId());
-        tv_userMoney.setText("财富:"+userInfo.getMoney());
+        MyUser userInfo = BmobUser.getCurrentUser(this, MyUser.class);
+        tv_userName.setText("昵称:" + userInfo.getUsername());
+        tv_userId.setText("ID:" + userInfo.getObjectId());
+        tv_userMoney.setText("财富:" + userInfo.getMoney());
     }
 
 
@@ -325,7 +323,8 @@ public class DisplayCCActivity extends AppCompatActivity {
                 if (rtd.isConnected()) {
                     // 监听表更新
                     rtd.subTableUpdate("GameBean");
-
+// 监听行更新
+//                    rtd.subRowUpdate("GameBean", "vE05777E");
                 }
             }
         });
