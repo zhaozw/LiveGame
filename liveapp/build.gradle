@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile files('libs/core.jar')
     compile files('libs/livesdk.jar')
+
 }

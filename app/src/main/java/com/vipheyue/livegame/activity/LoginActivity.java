@@ -111,7 +111,6 @@ public class LoginActivity extends AppCompatActivity {
             public void done(MyUser user, BmobException e) {
                 // TODO Auto-generated method stub
                 if(user!=null){
-                    Toast.makeText(LoginActivity.this, "bmob login success", Toast.LENGTH_SHORT).show();
                     initCC();
                     SharePreferencesUtil.putSpString("userName",et_phone.getText().toString().trim(),LoginActivity.this);
                     SharePreferencesUtil.putSpString("userPassWord",et_password.getText().toString().trim(),LoginActivity.this);

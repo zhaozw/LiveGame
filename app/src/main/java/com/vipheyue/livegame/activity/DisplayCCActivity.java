@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.vipheyue.livegame.R;
 import com.vipheyue.livegame.bean.ConnectData;
 import com.vipheyue.livegame.bean.GameBean;
@@ -89,31 +91,28 @@ public class DisplayCCActivity extends AppCompatActivity {
     private int direction_mIn_nan;
     private int direction_mIn_xi;
     private int direction_mIn_bei;
-//    private int direction_TotalIn_dong = 0;//总下注
-//    private int direction_TotalIn_nan = 0;
-//    private int direction_TotalIn_xi = 0;
-//    private int direction_TotalIn_bei = 0;
 
     //最多:2000+( 4个区域总和-2000)/4
 
     private MyUser currentUser;
+    private String tempObjectId;
+    private NiftyDialogBuilder dialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_cc);
         ButterKnife.bind(this);
-        initView();
-        getGameBean();
-        connect();
+        currentUser = BmobUser.getCurrentUser(this, MyUser.class);
+        updateView();
+        getLatestGameBean();
     }
 
 
-    private void initView() {
-        MyUser userInfo = BmobUser.getCurrentUser(this, MyUser.class);
-        tv_userName.setText("昵称:" + userInfo.getUsername());
-        tv_userId.setText("ID:" + userInfo.getObjectId());
-        tv_userMoney.setText("财富:" + userInfo.getMoney());
+    private void updateView() {
+        tv_userName.setText("昵称:" + currentUser.getUsername());
+        tv_userId.setText("ID:" + currentUser.getObjectId());
+        tv_userMoney.setText("财富:" + currentUser.getMoney());
     }
 
 
@@ -158,25 +157,37 @@ public class DisplayCCActivity extends AppCompatActivity {
         }
     }
 
-    private void getGameBean() {
+    private void getLatestGameBean() {
         currentUser = BmobUser.getCurrentUser(this, MyUser.class);
-
         BmobQuery<GameBean> query = new BmobQuery<GameBean>();
         query.setLimit(1); // 限制最多10条数据结果作为一页
         query.order("-updatedAt");
-        //TODO 这里要不要加学校限制
         query.findObjects(this, new FindListener<GameBean>() {
             @Override
             public void onSuccess(List<GameBean> object) {
                 currentGameBean = object.get(0);
+                tempObjectId = currentGameBean.getObjectId();
                 Log.d("TestActivity", "currentGameBean.getTotalIn_dong():" + currentGameBean.getTotalIn_dong());
+                LongConnectListener();
             }
 
             @Override
             public void onError(int code, String msg) {
-
+                Toast.makeText(DisplayCCActivity.this, "获取最新数据错误码: " + code + msg, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void init_mIn_direction() {
+        direction_mIn_dong = 0;
+        direction_mIn_nan = 0;
+        direction_mIn_xi = 0;
+        direction_mIn_bei = 0;
+        currentSelectAmount = 0;
+        tv_dong_Mytotal.setText("我下注: " + direction_mIn_dong + "元");
+        tv_nan_Mytotal.setText("我下注: " + direction_mIn_nan + "元");
+        tv_xi_Mytotal.setText("我下注: " + direction_mIn_xi + "元");
+        tv_bei_Mytotal.setText("我下注: " + direction_mIn_bei + "元");
     }
 
     private void pressDirection(String direction) {
@@ -188,7 +199,6 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean.setTotalIn_dong(currentGameBean.getTotalIn_dong() + currentSelectAmount);//总额增加
                 direction_mIn_dong += currentSelectAmount;
                 tv_dong_Mytotal.setText("我下注: " + direction_mIn_dong + "元");
-//                tv_dong_total.setText("总下注: " + currentGameBean.getTotalIn_dong() + "元");
                 break;
             case "nan":
                 if (checkSystemMoney(direction_mIn_nan)) {
@@ -197,7 +207,6 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean.setTotalIn_nan(currentGameBean.getTotalIn_nan() + currentSelectAmount);
                 direction_mIn_nan += currentSelectAmount;
                 tv_nan_Mytotal.setText("我下注: " + direction_mIn_nan + "元");
-//                tv_nan_total.setText("总下注: " + currentGameBean.getTotalIn_nan() + "元");
                 break;
             case "xi":
                 if (checkSystemMoney(direction_mIn_xi)) {
@@ -206,7 +215,6 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean.setTotalIn_xi(currentGameBean.getTotalIn_xi() + currentSelectAmount);
                 direction_mIn_xi += currentSelectAmount;
                 tv_xi_Mytotal.setText("我下注: " + direction_mIn_xi + "元");
-//                tv_xi_total.setText("总下注: " + currentGameBean.getTotalIn_xi() + "元");
                 break;
             case "bei":
                 if (checkSystemMoney(direction_mIn_bei)) {
@@ -215,7 +223,6 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean.setTotalIn_bei(currentGameBean.getTotalIn_bei() + currentSelectAmount);
                 direction_mIn_bei += currentSelectAmount;
                 tv_bei_Mytotal.setText("我下注: " + direction_mIn_bei + "元");
-//                tv_bei_total.setText("总下注: " + currentGameBean.getTotalIn_bei() + "元");
                 break;
         }
 
@@ -223,7 +230,7 @@ public class DisplayCCActivity extends AppCompatActivity {
         currentGameBean.update(this, new UpdateListener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(DisplayCCActivity.this, "currentGameBean上传到服务器成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(DisplayCCActivity.this, "currentGameBean上传到服务器成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -248,7 +255,6 @@ public class DisplayCCActivity extends AppCompatActivity {
         int fourDirecBySubtionMoney = (currentGameBean.getTotal()) - 2000;//todo  这里因该是总金额 不是自己投的
         int topMonty = 2000 + (fourDirecBySubtionMoney > 0 ? fourDirecBySubtionMoney / 4 : 0);//目前支持最大的下注
         int tempMyTop = direction_TotalMonty + currentSelectAmount;//选择之后 预计会达到的下注
-//        Toast.makeText(this, "fourDirecBySubtionMoney   " + fourDirecBySubtionMoney + " topMonty: " + topMonty + "    direction_TotalMonty + currentSelectAmount " + tempMyTop, Toast.LENGTH_SHORT).show();
         if ((tempMyTop) > topMonty) {
             return true;//超标了
         } else {
@@ -259,6 +265,7 @@ public class DisplayCCActivity extends AppCompatActivity {
     private Boolean checkMyMoney() {
         if (currentUser.getMoney() >= currentSelectAmount) {
             currentUser.setMoney(currentUser.getMoney() - currentSelectAmount);    // 荷包数量减少 总额增多 这里是数量减少
+            updateView();
             return false;
         } else {
             Toast.makeText(this, "余额不足", Toast.LENGTH_SHORT).show();
@@ -267,15 +274,27 @@ public class DisplayCCActivity extends AppCompatActivity {
         }
     }
 
-    private void connect() {
+    private void LongConnectListener() {
         final BmobRealTimeData rtd = new BmobRealTimeData();
         rtd.start(this, new ValueEventListener() {
             @Override
             public void onDataChange(JSONObject data) {
-                Toast.makeText(DisplayCCActivity.this, "监听到数据改变", Toast.LENGTH_SHORT).show();
                 Log.d("bmob", "(" + data.optString("action") + ")" + "数据：" + data);
                 ConnectData bean = GsonUtils.fromJson(data.toString(), ConnectData.class);
+
                 currentGameBean = bean.getData();
+                String leastObjId = currentGameBean.getObjectId();
+                if (leastObjId.equals(tempObjectId)) {
+                    Log.d("DisplayCCActivity", "obj 相等");
+                } else {
+                    Log.d("DisplayCCActivity", "boj 不相等");//TODO
+                    // 取消监听表更新
+                    rtd.unsubTableUpdate("GameBean");
+                    //重新获取数据?
+                    getLatestGameBean();
+                    init_mIn_direction();
+
+                }
                 Log.d("bmob", bean.getData().getTotalIn_dong() + " " + bean.getData().getTotalIn_nan() + " " + bean.getData().getTotalIn_xi() + " " + bean.getData().getTotalIn_bei());
                 //TODO 这里需要更新界面
                 tv_dong_total.setText("总下注: " + currentGameBean.getTotalIn_dong() + "元");
@@ -283,29 +302,39 @@ public class DisplayCCActivity extends AppCompatActivity {
                 tv_xi_total.setText("总下注: " + currentGameBean.getTotalIn_xi() + "元");
                 tv_bei_total.setText("总下注: " + currentGameBean.getTotalIn_bei() + "元");
 
-                if (currentGameBean.getFinish()) {                //如果 finish 了 开始结算
-                    Toast.makeText(DisplayCCActivity.this, "当前 game 已经完了,下面开始结算程序", Toast.LENGTH_SHORT).show();
+                if (currentGameBean.getFinish()) {
+                    //如果 finish 了 开始结算
+//                    Toast.makeText(DisplayCCActivity.this, "当前 game 已经完了,下面开始结算程序", Toast.LENGTH_SHORT).show();
                     int answer = currentGameBean.getAnswer();
                     int prize = 0;
+                    String lotteryResult = null;
                     switch (answer) {
                         case 1:
                             prize = direction_mIn_dong * 2;
+                            lotteryResult = "东";
                             break;
                         case 2:
                             prize = direction_mIn_nan * 2;
+                            lotteryResult = "南";
                             break;
                         case 3:
                             prize = direction_mIn_xi * 2;
+                            lotteryResult = "西";
                             break;
                         case 4:
                             prize = direction_mIn_bei * 2;
+                            lotteryResult = "北";
                             break;
                     }
-                    currentUser.setMoney(currentUser.getMoney() + prize - direction_mIn_dong - direction_mIn_nan - direction_mIn_xi - direction_mIn_bei);
+                    dialogShow(answer,lotteryResult);
+
+//                    currentUser.setMoney(currentUser.getMoney() + prize - direction_mIn_dong - direction_mIn_nan - direction_mIn_xi - direction_mIn_bei);
+                    currentUser.setMoney(currentUser.getMoney() + prize);
                     currentUser.update(DisplayCCActivity.this, new UpdateListener() {
                         @Override
                         public void onSuccess() {
-                            Toast.makeText(DisplayCCActivity.this, "结算成功", Toast.LENGTH_SHORT).show();
+                            updateView();
+//                            Toast.makeText(DisplayCCActivity.this, "结算成功", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -318,16 +347,47 @@ public class DisplayCCActivity extends AppCompatActivity {
 
             @Override
             public void onConnectCompleted() {
-                // TODO Auto-generated method stub
                 Log.d("bmob", "连接成功:" + rtd.isConnected());
                 if (rtd.isConnected()) {
                     // 监听表更新
                     rtd.subTableUpdate("GameBean");
 // 监听行更新
-//                    rtd.subRowUpdate("GameBean", "vE05777E");
+//                    rtd.subRowUpdate("GameBean", currentGameBean.getObjectId());
                 }
             }
         });
+    }
+
+    public void dialogShow(int answer, String lotteryResult) {
+        dialogBuilder = NiftyDialogBuilder.getInstance(this);
+        dialogBuilder
+                .withTitle("开奖")                                  //.withTitle(null)  no title
+                .withTitleColor("#FFFFFF")                                  //def
+                .withDividerColor("#11000000")                              //def
+                .withMessage("开奖结果: "+lotteryResult)                     //.withMessage(null)  no Msg
+                .withMessageColor("#FFFFFFFF")                              //def  | withMessageColor(int resid)
+                .withDialogColor("#A935B5")                               //def  | withDialogColor(int resid)                               //def
+//                .withIcon(getResources().getDrawable(R.drawable.icon))
+                .isCancelableOnTouchOutside(true)                           //def    | isCancelable(true)
+                .withDuration(700)                                          //def
+                .withEffect(Effectstype.Fliph)                                         //def Effectstype.Slidetop
+                .withButton1Text("确定")                                      //def gone
+                .withButton2Text("取消")                                  //def gone
+                .setCustomView(R.layout.custom_view, this)         //.setCustomView(View or ResId,context)
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder.dismiss();
+                    }
+                })
+                .setButton2Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder.dismiss();
+                    }
+                })
+                .show();
+
     }
 
 }
