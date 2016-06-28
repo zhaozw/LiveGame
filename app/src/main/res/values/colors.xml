@@ -22,4 +22,8 @@
     <color name="chat_background">#dddddd</color>
     <color name="replay_bottom_bar">#66666666</color>
     <color name="live_play_bar">#44666666</color>
+
+    <color name="my_in_direction">#C64134</color>
+
+
 </resources>

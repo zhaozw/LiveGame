@@ -59,15 +59,15 @@
                         <TextView
                             android:id="@+id/tv_dong_total"
                             style="@style/iv_direction_style"
-                            android:text="总下注: 0元" />
+                            android:text="0" />
 
                         <TextView
                             android:id="@+id/tv_dong_Mytotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tv_dong_total"
-                            android:text="我下注: 0元"
-                            android:textColor="@android:color/white" />
+                            android:text="0"
+                            android:textColor="@color/my_in_direction" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -86,7 +86,7 @@
                             android:id="@+id/tv_nan_total"
                             style="@style/iv_direction_style"
                             android:layout_alignParentRight="true"
-                            android:text="总下注: 0元" />
+                            android:text="0" />
 
                         <TextView
                             android:id="@+id/tv_nan_Mytotal"
@@ -94,8 +94,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/tv_nan_total"
-                            android:text="我下注: 0元"
-                            android:textColor="@android:color/white" />
+                            android:text="0"
+                            android:textColor="@color/my_in_direction" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -122,15 +122,15 @@
                         <TextView
                             android:id="@+id/tv_xi_total"
                             style="@style/iv_direction_style"
-                            android:text="总下注: 0元" />
+                            android:text="0" />
 
                         <TextView
                             android:id="@+id/tv_xi_Mytotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tv_xi_total"
-                            android:text="我下注: 0元"
-                            android:textColor="@android:color/white" />
+                            android:text="0"
+                            android:textColor="@color/my_in_direction"/>
                     </RelativeLayout>
 
 
@@ -151,7 +151,7 @@
                             android:id="@+id/tv_bei_total"
                             style="@style/iv_direction_style"
                             android:layout_alignParentRight="true"
-                            android:text="总下注: 0元" />
+                            android:text="0" />
 
                         <TextView
                             android:id="@+id/tv_bei_Mytotal"
@@ -159,8 +159,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/tv_bei_total"
-                            android:text="我下注: 0元"
-                            android:textColor="@android:color/white" />
+                            android:text="0"
+                            android:textColor="@color/my_in_direction"/>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -275,12 +275,6 @@
                 android:text="昵称:江南金库"
                 android:textColor="#C5A0AA" />
 
-            <TextView
-                android:id="@+id/tv_userId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ID:123456789"
-                android:textColor="#C5A0AA" />
 
             <TextView
                 android:id="@+id/tv_userMoney"

@@ -33,7 +33,6 @@ import cn.bmob.v3.listener.ValueEventListener;
 public class DisplayActivity extends AppCompatActivity {
 
 
-    String url = "rtmp://v1.live.126.net/live/4c8a4ae25686439b9de048ec75e23c76";
     @Bind(R.id.tv_dong_total)
     TextView tv_dong_total;
     @Bind(R.id.tv_dong_Mytotal)
@@ -79,8 +78,7 @@ public class DisplayActivity extends AppCompatActivity {
 
     @Bind(R.id.tv_userName)
     TextView tv_userName;
-    @Bind(R.id.tv_userId)
-    TextView tv_userId;
+
     @Bind(R.id.tv_userMoney)
     TextView tv_userMoney;
 
@@ -111,7 +109,6 @@ public class DisplayActivity extends AppCompatActivity {
     private void initView() {
         MyUser userInfo = BmobUser.getCurrentUser(this,MyUser.class);
         tv_userName.setText("昵称:"+userInfo.getUsername());
-        tv_userId.setText("ID:"+userInfo.getObjectId());
         tv_userMoney.setText("财富:"+userInfo.getMoney());
     }
 
