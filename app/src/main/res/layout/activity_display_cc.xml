@@ -6,12 +6,16 @@
     android:background="#000000"
     android:orientation="vertical"
     tools:context="com.vipheyue.livegame.activity.DisplayActivity">
-
-    <TextView
-        android:layout_width="match_parent"
+    <com.vipheyue.livegame.activity.FocusedTextView
         android:layout_height="wrap_content"
-        android:text="欢迎进入xxxxx"
-        android:textColor="#FFFFFF" />
+        android:textColor="@android:color/white"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:layout_width="fill_parent"
+        android:textSize="18sp"
+        android:text="欢迎进入直播猜猜猜"
+       />
+
     <fragment
         android:id="@+id/display_fragmet"
         android:name="com.vipheyue.livegame.fragment.PlayCCFragment"

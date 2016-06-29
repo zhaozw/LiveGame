@@ -125,6 +125,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                     //重新获取数据?
                     getLatestGameBean();
                     init_mIn_direction();
+                    return;
 
                 }
                 Log.d("bmob", bean.getData().getTotalIn_dong() + " " + bean.getData().getTotalIn_nan() + " " + bean.getData().getTotalIn_xi() + " " + bean.getData().getTotalIn_bei());
@@ -157,7 +158,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                             lotteryResult = "北";
                             break;
                     }
-                    dialogShow(answer, lotteryResult);
+                    dialogShow("开奖", "开奖结果: " +lotteryResult);
                     currentUser.setMoney(currentUser.getMoney() + prize);
                     currentUser.update(DisplayCCActivity.this, new UpdateListener() {
                         @Override
@@ -226,10 +227,13 @@ public class DisplayCCActivity extends AppCompatActivity {
                 selectAmount(500);
                 break;
             case R.id.tv_bottom_recharge:
+                dialogShow("欢迎充值","请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_exchange:
+                dialogShow("兑换","请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_presented:
+                dialogShow("赠送","请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_out:
                 BmobUser.logOut(this);   //清除缓存用户对象
@@ -326,13 +330,13 @@ public class DisplayCCActivity extends AppCompatActivity {
 
 
 /** 结算时弹出的对话框**/
-    public void dialogShow(int answer, String lotteryResult) {
+    public void dialogShow(String title, String lotteryResult) {
         dialogBuilder = NiftyDialogBuilder.getInstance(this);
         dialogBuilder
-                .withTitle("开奖")                                  //.withTitle(null)  no title
+                .withTitle(title)                                  //.withTitle(null)  no title
                 .withTitleColor("#FFFFFF")                                  //def
                 .withDividerColor("#11000000")                              //def
-                .withMessage("开奖结果: " + lotteryResult)                     //.withMessage(null)  no Msg
+                .withMessage( lotteryResult)                     //.withMessage(null)  no Msg
                 .withMessageColor("#FFFFFFFF")                              //def  | withMessageColor(int resid)
                 .withDialogColor("#A935B5")                               //def  | withDialogColor(int resid)                               //def
 //                .withIcon(getResources().getDrawable(R.drawable.icon))
