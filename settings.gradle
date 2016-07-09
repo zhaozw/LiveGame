@@ -1,1 +1,1 @@
-include ':app', ':liveapp'
+include ':app'
