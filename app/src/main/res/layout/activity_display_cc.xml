@@ -181,11 +181,11 @@
                     android:layout_marginTop="6dp"
                     android:gravity="center"
                     android:text="下注时间"
-                    android:textColor="#C39BAE"
+                    android:textColor="#C39BAE" android:id="@+id/tv_indicator"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <TextView  android:id="@+id/tv_indicator_Time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

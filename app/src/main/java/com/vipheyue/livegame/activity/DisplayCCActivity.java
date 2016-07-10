@@ -2,6 +2,7 @@ package com.vipheyue.livegame.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +55,10 @@ public class DisplayCCActivity extends AppCompatActivity {
 
     @Bind(R.id.tv_userMoney)
     TextView tv_userMoney;
+    @Bind(R.id.tv_indicator)
+    TextView tv_indicator;
+    @Bind(R.id.tv_indicator_Time)
+    TextView tv_indicator_Time;
 
     private int currentSelectAmount;
     private int direction_mIn_dong;//我的下注
@@ -66,6 +71,8 @@ public class DisplayCCActivity extends AppCompatActivity {
     private MyUser currentUser;
     private String tempObjectId;
     private NiftyDialogBuilder dialogBuilder;
+    private CountDownTimer betCountDown;
+    private CountDownTimer resultCountDown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +80,21 @@ public class DisplayCCActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_cc);
         ButterKnife.bind(this);
         currentUser = BmobUser.getCurrentUser(this, MyUser.class);//这里只执行一次 因为需要操作的是临时的 currentUser 不是真实User
-        updateView();
+        updateAccount();
         getLatestGameBean();
     }
 
     /**
      * 1 更新用户金币,注意这里不能再重新获取一次 不能执行 currentUser = BmobUser.getCurrentUser(this, MyUser.class); 因为操作的是临时的user
      **/
-    private void updateView() {
+    private void updateAccount() {
         tv_userName.setText("账号:" + currentUser.getUsername());
         tv_userMoney.setText("财富:" + currentUser.getMoney());
     }
-    /** 2 获取服务器上最新的User 并且赋值给临时user currentUser**/
+
+    /**
+     * 2 获取服务器上最新的User 并且赋值给临时user currentUser
+     **/
     private void getLatestGameBean() {
         currentUser = BmobUser.getCurrentUser(this, MyUser.class);
         BmobQuery<GameBean> query = new BmobQuery<GameBean>();
@@ -96,7 +106,37 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean = object.get(0);
                 tempObjectId = currentGameBean.getObjectId();
                 Log.d("TestActivity", "currentGameBean.getTotalIn_dong():" + currentGameBean.getTotalIn_dong());
+                initTotalDirection();
                 LongConnectListener();
+
+                switch (currentGameBean.getState()) {
+                    case 0://空闲状态不能下注
+                        clearAllCountDown();
+                        tv_indicator.setText("空闲状态");
+                        tv_indicator_Time.setText("-");
+                        break;
+
+                    case 1 ://下注状态
+                        clearAllCountDown();
+                        tv_indicator.setText("下注时间");
+                        startBetCountDown();
+
+                        break;
+
+                    case 2://等待开奖中  开奖倒计时
+                        clearAllCountDown();
+                        tv_indicator.setText("开奖时间");
+                        waitResultCountDown(); //开始开奖的倒计时
+                        break;
+
+                    case 3 ://开奖结束
+                        clearAllCountDown();
+                        tv_indicator.setText("空闲状态");
+                        tv_indicator_Time.setText("-");
+                        break;
+
+                }
+
             }
 
             @Override
@@ -105,7 +145,55 @@ public class DisplayCCActivity extends AppCompatActivity {
             }
         });
     }
-    /** 3 监听表 实时跟新GameBean  **/
+
+    private void clearAllCountDown() {
+        if (betCountDown != null) {
+            betCountDown.cancel();
+        }
+        if (resultCountDown != null) {
+            resultCountDown.cancel();
+        }
+    }
+
+    private void waitResultCountDown() {
+        resultCountDown = new CountDownTimer(99000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tv_indicator_Time.setText(""+millisUntilFinished/1000);
+            }
+
+            @Override
+            public void onFinish() {
+                tv_indicator_Time.setText("请等待");
+            }
+        };
+        resultCountDown.start();
+    }
+
+    //倒计时
+    private void startBetCountDown() {
+
+        betCountDown = new CountDownTimer(30000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tv_indicator_Time.setText(""+millisUntilFinished/1000);
+            }
+
+            @Override
+            public void onFinish() {
+                tv_indicator.setText("开奖时间");
+                currentGameBean.setState(2);//进入等待开奖
+                waitResultCountDown();
+            }
+        };
+        betCountDown.start();
+    }
+
+    /**
+     * 3 监听表 实时跟新GameBean
+     **/
     private void LongConnectListener() {
         final BmobRealTimeData rtd = new BmobRealTimeData();
         rtd.start(this, new ValueEventListener() {
@@ -126,14 +214,10 @@ public class DisplayCCActivity extends AppCompatActivity {
                     getLatestGameBean();
                     init_mIn_direction();
                     return;
-
                 }
                 Log.d("bmob", bean.getData().getTotalIn_dong() + " " + bean.getData().getTotalIn_nan() + " " + bean.getData().getTotalIn_xi() + " " + bean.getData().getTotalIn_bei());
                 //TODO 这里需要更新界面
-                tv_dong_total.setText( currentGameBean.getTotalIn_dong() + "");
-                tv_nan_total.setText( currentGameBean.getTotalIn_nan() + "");
-                tv_xi_total.setText( currentGameBean.getTotalIn_xi() + "");
-                tv_bei_total.setText( currentGameBean.getTotalIn_bei() + "");
+                initTotalDirection();
 
                 if (currentGameBean.getFinish()) {
                     //如果 finish 了 开始结算
@@ -142,28 +226,32 @@ public class DisplayCCActivity extends AppCompatActivity {
                     String lotteryResult = null;
                     switch (answer) {
                         case 1:
-                            prize = direction_mIn_dong * 39/10;
+                            prize = direction_mIn_dong * 39 / 10;
                             lotteryResult = "东";
                             break;
                         case 2:
-                            prize = direction_mIn_nan *39/10;
+                            prize = direction_mIn_nan * 39 / 10;
                             lotteryResult = "南";
                             break;
                         case 3:
-                            prize = direction_mIn_xi * 39/10;
+                            prize = direction_mIn_xi * 39 / 10;
                             lotteryResult = "西";
                             break;
                         case 4:
-                            prize = direction_mIn_bei *39/10;
+                            prize = direction_mIn_bei * 39 / 10;
                             lotteryResult = "北";
                             break;
                     }
-                    dialogShow("开奖", "开奖结果: " +lotteryResult);
+                    dialogShow("开奖", "开奖结果: " + lotteryResult);
+                    tv_indicator.setText("开奖结果");
+                    tv_indicator_Time.setText(""+lotteryResult);
+                    clearAllCountDown();
                     currentUser.setMoney(currentUser.getMoney() + prize);
                     currentUser.update(DisplayCCActivity.this, new UpdateListener() {
                         @Override
                         public void onSuccess() {
-                            updateView();
+                            updateAccount();
+                            init_mIn_direction();
                         }
 
                         @Override
@@ -185,18 +273,27 @@ public class DisplayCCActivity extends AppCompatActivity {
         });
     }
 
+    private void initTotalDirection() {
+        tv_dong_total.setText(currentGameBean.getTotalIn_dong() + "");
+        tv_nan_total.setText(currentGameBean.getTotalIn_nan() + "");
+        tv_xi_total.setText(currentGameBean.getTotalIn_xi() + "");
+        tv_bei_total.setText(currentGameBean.getTotalIn_bei() + "");
+    }
 
-    /** 初始化我的下注**/
+
+    /**
+     * 初始化我的下注
+     **/
     private void init_mIn_direction() {
         direction_mIn_dong = 0;
         direction_mIn_nan = 0;
         direction_mIn_xi = 0;
         direction_mIn_bei = 0;
         currentSelectAmount = 0;
-        tv_dong_Mytotal.setText( direction_mIn_dong+"");
-        tv_nan_Mytotal.setText( direction_mIn_nan+"");
-        tv_xi_Mytotal.setText(direction_mIn_xi+"");
-        tv_bei_Mytotal.setText(direction_mIn_bei+"");
+        tv_dong_Mytotal.setText(direction_mIn_dong + "");
+        tv_nan_Mytotal.setText(direction_mIn_nan + "");
+        tv_xi_Mytotal.setText(direction_mIn_xi + "");
+        tv_bei_Mytotal.setText(direction_mIn_bei + "");
     }
 
     @OnClick({R.id.iv_direction_dong, R.id.iv_direction_nan, R.id.iv_direction_xi, R.id.iv_direction_bei, R.id.main_amount_10, R.id.main_amount_100, R.id.main_amount_50, R.id.main_amount_500, R.id.tv_bottom_recharge, R.id.tv_bottom_exchange, R.id.tv_bottom_presented, R.id.tv_bottom_out})
@@ -227,13 +324,13 @@ public class DisplayCCActivity extends AppCompatActivity {
                 selectAmount(500);
                 break;
             case R.id.tv_bottom_recharge:
-                dialogShow("欢迎充值","请联系QQ:346920463");
+                dialogShow("欢迎充值", "请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_exchange:
-                dialogShow("兑换","请联系QQ:346920463");
+                dialogShow("兑换", "请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_presented:
-                dialogShow("赠送","请联系QQ:346920463");
+                dialogShow("赠送", "请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_out:
                 BmobUser.logOut(this);   //清除缓存用户对象
@@ -243,9 +340,14 @@ public class DisplayCCActivity extends AppCompatActivity {
         }
     }
 
-    /** 按下方位按钮 并更新用户金币(这里需要检查用户金币数)**/
+    /**
+     * 按下方位按钮 并更新用户金币(这里需要检查用户金币数)
+     **/
 
     private void pressDirection(String direction) {
+        if (currentGameBean.getState()!=1) {//如果不是下注时间就return;
+            return;
+        }
         switch (direction) {
             case "dong":
                 if (checkSystemMoney(direction_mIn_dong)) {
@@ -253,7 +355,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                 }
                 currentGameBean.setTotalIn_dong(currentGameBean.getTotalIn_dong() + currentSelectAmount);//总额增加
                 direction_mIn_dong += currentSelectAmount;
-                tv_dong_Mytotal.setText( direction_mIn_dong+"" );
+                tv_dong_Mytotal.setText(direction_mIn_dong + "");
                 break;
             case "nan":
                 if (checkSystemMoney(direction_mIn_nan)) {
@@ -261,7 +363,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                 }
                 currentGameBean.setTotalIn_nan(currentGameBean.getTotalIn_nan() + currentSelectAmount);
                 direction_mIn_nan += currentSelectAmount;
-                tv_nan_Mytotal.setText( direction_mIn_nan+"" );
+                tv_nan_Mytotal.setText(direction_mIn_nan + "");
                 break;
             case "xi":
                 if (checkSystemMoney(direction_mIn_xi)) {
@@ -269,7 +371,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                 }
                 currentGameBean.setTotalIn_xi(currentGameBean.getTotalIn_xi() + currentSelectAmount);
                 direction_mIn_xi += currentSelectAmount;
-                tv_xi_Mytotal.setText( direction_mIn_xi +"");
+                tv_xi_Mytotal.setText(direction_mIn_xi + "");
                 break;
             case "bei":
                 if (checkSystemMoney(direction_mIn_bei)) {
@@ -277,7 +379,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                 }
                 currentGameBean.setTotalIn_bei(currentGameBean.getTotalIn_bei() + currentSelectAmount);
                 direction_mIn_bei += currentSelectAmount;
-                tv_bei_Mytotal.setText( direction_mIn_bei+"");
+                tv_bei_Mytotal.setText(direction_mIn_bei + "");
                 break;
         }
 
@@ -296,12 +398,17 @@ public class DisplayCCActivity extends AppCompatActivity {
         });
 
     }
-    /** 所选择的一次下注金额**/
+
+    /**
+     * 所选择的一次下注金额
+     **/
     private void selectAmount(int i) {
         currentSelectAmount = i;
     }
 
-    /** 判断 下注是否符合系统规则 里面 还有多少money 是否超标**/
+    /**
+     * 判断 下注是否符合系统规则 里面 还有多少money 是否超标
+     **/
     // 荷包数量减少 总额增多,然后上传
     //如果监听到 gamebean 的 finish字段为true,就判断数据,然后同步数据;
     public Boolean checkSystemMoney(int direction_TotalMonty) {
@@ -315,11 +422,14 @@ public class DisplayCCActivity extends AppCompatActivity {
             return checkMyMoney();//false为没有超标
         }
     }
-    /** 检查 还有多少money 是否超标 如何没有就更新界面**/
+
+    /**
+     * 检查 还有多少money 是否超标 如何没有就更新界面
+     **/
     private Boolean checkMyMoney() {
         if (currentUser.getMoney() >= currentSelectAmount) {
             currentUser.setMoney(currentUser.getMoney() - currentSelectAmount);    // 荷包数量减少 总额增多 这里是数量减少
-            updateView();
+            updateAccount();
             return false;
         } else {
             Toast.makeText(this, "余额不足", Toast.LENGTH_SHORT).show();
@@ -329,14 +439,16 @@ public class DisplayCCActivity extends AppCompatActivity {
     }
 
 
-/** 结算时弹出的对话框**/
+    /**
+     * 结算时弹出的对话框
+     **/
     public void dialogShow(String title, String lotteryResult) {
         dialogBuilder = NiftyDialogBuilder.getInstance(this);
         dialogBuilder
                 .withTitle(title)                                  //.withTitle(null)  no title
                 .withTitleColor("#FFFFFF")                                  //def
                 .withDividerColor("#11000000")                              //def
-                .withMessage( lotteryResult)                     //.withMessage(null)  no Msg
+                .withMessage(lotteryResult)                     //.withMessage(null)  no Msg
                 .withMessageColor("#FFFFFFFF")                              //def  | withMessageColor(int resid)
                 .withDialogColor("#A935B5")                               //def  | withDialogColor(int resid)                               //def
 //                .withIcon(getResources().getDrawable(R.drawable.icon))

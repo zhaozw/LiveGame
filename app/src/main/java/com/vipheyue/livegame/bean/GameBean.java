@@ -12,6 +12,15 @@ public class GameBean extends BmobObject {
     private Integer TotalIn_bei=0;
     private Boolean  finish=false;
     private Integer  answer;
+    private Integer  state=0;//0 空闲状态  1  下注时间   2 下注时间过后(开奖等待时间)  3 开奖结束
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Integer getAnswer() {
         return answer;
