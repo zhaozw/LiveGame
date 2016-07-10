@@ -466,7 +466,6 @@ public class DisplayCCActivity extends AppCompatActivity {
                     }
                 })
                 .show();
-
     }
 
 }
