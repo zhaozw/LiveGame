@@ -76,38 +76,37 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.TestActivity"></activity>
+        <activity android:name=".activity.TestActivity" />
         <activity
             android:name=".cc.com.bokecc.live.demo.LoginActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".cc.com.bokecc.live.demo.LiveRoomActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".cc.com.bokecc.live.demo.SplashActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-
-        </activity>
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
         <activity
             android:name=".cc.com.bokecc.live.demo.LiveReplayActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".cc.com.example.qr_codescan.MipcaActivityCapture"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
-        <activity android:name=".activity.DisplayCCActivity"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".activity.DisplayCCActivity" />
+        <activity android:name=".activity.PersentActivity"></activity>
     </application>
 
 </manifest>

@@ -325,7 +325,9 @@ public class DisplayCCActivity extends AppCompatActivity {
                 dialogShow("兑换", "请联系QQ:346920463");
                 break;
             case R.id.tv_bottom_presented:
-                dialogShow("赠送", "请联系QQ:346920463");
+                dialogShow("兑换", "请联系QQ:346920463");
+
+//                startActivity(new Intent(this,PersentActivity.class));
                 break;
             case R.id.tv_bottom_out:
                 BmobUser.logOut(this);   //清除缓存用户对象
