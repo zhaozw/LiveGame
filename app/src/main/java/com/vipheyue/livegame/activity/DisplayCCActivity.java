@@ -106,31 +106,28 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean = object.get(0);
                 tempObjectId = currentGameBean.getObjectId();
                 Log.d("TestActivity", "currentGameBean.getTotalIn_dong():" + currentGameBean.getTotalIn_dong());
-                initTotalDirection();
+                initTotalDirection();//TODO 新增 这儿之前做掉了
                 LongConnectListener();
 
+
+                clearAllCountDown();
                 switch (currentGameBean.getState()) {
                     case 0://空闲状态不能下注
-                        clearAllCountDown();
                         tv_indicator.setText("空闲状态");
                         tv_indicator_Time.setText("-");
                         break;
 
                     case 1 ://下注状态
-                        clearAllCountDown();
                         tv_indicator.setText("下注时间");
                         startBetCountDown();
-
                         break;
 
                     case 2://等待开奖中  开奖倒计时
-                        clearAllCountDown();
                         tv_indicator.setText("开奖时间");
                         waitResultCountDown(); //开始开奖的倒计时
                         break;
 
                     case 3 ://开奖结束
-                        clearAllCountDown();
                         tv_indicator.setText("空闲状态");
                         tv_indicator_Time.setText("-");
                         break;
@@ -205,17 +202,15 @@ public class DisplayCCActivity extends AppCompatActivity {
                 currentGameBean = bean.getData();
                 String leastObjId = currentGameBean.getObjectId();
                 if (leastObjId.equals(tempObjectId)) {
-                    Log.d("DisplayCCActivity", "obj 相等");
+                    //obj 相等
                 } else {
-                    Log.d("DisplayCCActivity", "boj 不相等");//TODO
-                    // 取消监听表更新
+                    // 取消监听表更新 obj 不相等
                     rtd.unsubTableUpdate("GameBean");
-                    //重新获取数据?
+                    //重新获取数据
                     getLatestGameBean();
                     init_mIn_direction();
                     return;
                 }
-                Log.d("bmob", bean.getData().getTotalIn_dong() + " " + bean.getData().getTotalIn_nan() + " " + bean.getData().getTotalIn_xi() + " " + bean.getData().getTotalIn_bei());
                 //TODO 这里需要更新界面
                 initTotalDirection();
 

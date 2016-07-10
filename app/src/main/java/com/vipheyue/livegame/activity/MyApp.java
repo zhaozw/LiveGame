@@ -2,9 +2,8 @@ package com.vipheyue.livegame.activity;
 
 import android.app.Application;
 
+import com.orhanobut.logger.Logger;
 import com.vipheyue.livegame.bean.MyUser;
-
-import java.util.logging.Logger;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
@@ -24,6 +23,8 @@ public class MyApp extends Application {
         Bmob.initialize(this,"e64952ec5a041da32b1c23568730fc4d");//开发环境
         // 使用推送服务时的初始化操作
         BmobInstallation.getCurrentInstallation(this).save();
+        Logger.init("LiveGame");
+
         // 启动推送服务
 //        BmobPush.startWork(this, helloFromCBM());//正式环境
 //        BmobPush.startWork(this, "8bc3229d5d5676e5f0a2296de5b65fd3");//开发环境
