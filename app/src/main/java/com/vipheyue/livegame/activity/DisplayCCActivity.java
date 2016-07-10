@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.vipheyue.livegame.R;
 import com.vipheyue.livegame.bean.ConnectData;
+import com.vipheyue.livegame.bean.ContactBean;
 import com.vipheyue.livegame.bean.GameBean;
 import com.vipheyue.livegame.bean.MyUser;
 import com.vipheyue.livegame.utils.GsonUtils;
@@ -28,6 +30,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobRealTimeData;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
@@ -59,6 +62,32 @@ public class DisplayCCActivity extends AppCompatActivity {
     TextView tv_indicator;
     @Bind(R.id.tv_indicator_Time)
     TextView tv_indicator_Time;
+    @Bind(R.id.ftv_tip)
+    FocusedTextView ftv_tip;
+    @Bind(R.id.iv_direction_dong)
+    ImageView iv_direction_dong;
+    @Bind(R.id.iv_direction_nan)
+    ImageView iv_direction_nan;
+    @Bind(R.id.iv_direction_xi)
+    ImageView iv_direction_xi;
+    @Bind(R.id.iv_direction_bei)
+    ImageView iv_direction_bei;
+    @Bind(R.id.main_amount_10)
+    ImageView main_amount_10;
+    @Bind(R.id.main_amount_100)
+    ImageView main_amount_100;
+    @Bind(R.id.main_amount_50)
+    ImageView main_amount_50;
+    @Bind(R.id.main_amount_500)
+    ImageView main_amount_500;
+    @Bind(R.id.tv_bottom_recharge)
+    TextView tv_bottom_recharge;
+    @Bind(R.id.tv_bottom_exchange)
+    TextView tv_bottom_exchange;
+    @Bind(R.id.tv_bottom_presented)
+    TextView tv_bottom_presented;
+    @Bind(R.id.tv_bottom_out)
+    TextView tv_bottom_out;
 
     private int currentSelectAmount;
     private int direction_mIn_dong;//我的下注
@@ -73,6 +102,7 @@ public class DisplayCCActivity extends AppCompatActivity {
     private NiftyDialogBuilder dialogBuilder;
     private CountDownTimer betCountDown;
     private CountDownTimer resultCountDown;
+    private String contactTip="请联系QQ:346920463";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +110,27 @@ public class DisplayCCActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_cc);
         ButterKnife.bind(this);
         currentUser = BmobUser.getCurrentUser(this, MyUser.class);//这里只执行一次 因为需要操作的是临时的 currentUser 不是真实User
+        queryTodayTip();
         updateAccount();
         getLatestGameBean();
+    }
+
+    private void queryTodayTip() {
+        BmobQuery<ContactBean> query = new BmobQuery<ContactBean>();
+        query.getObject(this, "672481cacc", new GetListener<ContactBean>() {
+
+            @Override
+            public void onSuccess(ContactBean object) {
+                ftv_tip.setText(object.getTodayTip());
+                contactTip = object.getContactTip();
+            }
+
+            @Override
+            public void onFailure(int code, String arg0) {
+            }
+
+        });
+
     }
 
     /**
@@ -117,7 +166,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                         tv_indicator_Time.setText("-");
                         break;
 
-                    case 1 ://下注状态
+                    case 1://下注状态
                         tv_indicator.setText("下注时间");
                         startBetCountDown();
                         break;
@@ -127,7 +176,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                         waitResultCountDown(); //开始开奖的倒计时
                         break;
 
-                    case 3 ://开奖结束
+                    case 3://开奖结束
                         tv_indicator.setText("空闲状态");
                         tv_indicator_Time.setText("-");
                         break;
@@ -157,7 +206,7 @@ public class DisplayCCActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                tv_indicator_Time.setText(""+millisUntilFinished/1000);
+                tv_indicator_Time.setText("" + millisUntilFinished / 1000);
             }
 
             @Override
@@ -175,7 +224,7 @@ public class DisplayCCActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                tv_indicator_Time.setText(""+millisUntilFinished/1000);
+                tv_indicator_Time.setText("" + millisUntilFinished / 1000);
             }
 
             @Override
@@ -218,7 +267,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                     //如果 finish 了 开始结算
                     int answer = currentGameBean.getAnswer();
                     int prize = 0;
-                    String lotteryResult = null;
+                    String lotteryResult = "";
                     switch (answer) {
                         case 1:
                             prize = direction_mIn_dong * 39 / 10;
@@ -239,7 +288,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                     }
                     dialogShow("开奖", "开奖结果: " + lotteryResult);
                     tv_indicator.setText("开奖结果");
-                    tv_indicator_Time.setText(""+lotteryResult);
+                    tv_indicator_Time.setText("" + lotteryResult);
                     clearAllCountDown();
                     currentUser.setMoney(currentUser.getMoney() + prize);
                     currentUser.update(DisplayCCActivity.this, new UpdateListener() {
@@ -319,13 +368,13 @@ public class DisplayCCActivity extends AppCompatActivity {
                 selectAmount(500);
                 break;
             case R.id.tv_bottom_recharge:
-                dialogShow("欢迎充值", "请联系QQ:346920463");
+                dialogShow("欢迎充值", contactTip);
                 break;
             case R.id.tv_bottom_exchange:
-                dialogShow("兑换", "请联系QQ:346920463");
+                dialogShow("兑换", contactTip);
                 break;
             case R.id.tv_bottom_presented:
-                dialogShow("兑换", "请联系QQ:346920463");
+                dialogShow("兑换", contactTip);
 
 //                startActivity(new Intent(this,PersentActivity.class));
                 break;
@@ -342,7 +391,7 @@ public class DisplayCCActivity extends AppCompatActivity {
      **/
 
     private void pressDirection(String direction) {
-        if (currentGameBean.getState()!=1) {//如果不是下注时间就return;
+        if (currentGameBean.getState() != 1) {//如果不是下注时间就return;
             return;
         }
         switch (direction) {

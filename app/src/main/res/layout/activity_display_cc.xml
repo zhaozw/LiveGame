@@ -9,7 +9,7 @@
     <com.vipheyue.livegame.activity.FocusedTextView
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:ellipsize="marquee"
+        android:ellipsize="marquee" android:id="@+id/ftv_tip"
         android:singleLine="true"
         android:layout_width="fill_parent"
         android:textSize="18sp"
