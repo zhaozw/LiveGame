@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.orhanobut.logger.Logger;
 import com.vipheyue.livegame.R;
 import com.vipheyue.livegame.bean.ConnectData;
 import com.vipheyue.livegame.bean.ContactBean;
@@ -103,6 +104,8 @@ public class DisplayCCActivity extends AppCompatActivity {
     private CountDownTimer betCountDown;
     private CountDownTimer resultCountDown;
     private String contactTip="请联系QQ:346920463";
+    private String contactTip2="请联系QQ:346920463";
+    private String contactTip3="请联系QQ:346920463";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +126,8 @@ public class DisplayCCActivity extends AppCompatActivity {
             public void onSuccess(ContactBean object) {
                 ftv_tip.setText(object.getTodayTip());
                 contactTip = object.getContactTip();
+                contactTip2 = object.getContactTip2();
+                contactTip3= object.getContactTip3();
             }
 
             @Override
@@ -286,6 +291,8 @@ public class DisplayCCActivity extends AppCompatActivity {
                             lotteryResult = "北";
                             break;
                     }
+
+                    Logger.d("开奖结果: " + lotteryResult );
                     dialogShow("开奖", "开奖结果: " + lotteryResult);
                     tv_indicator.setText("开奖结果");
                     tv_indicator_Time.setText("" + lotteryResult);
@@ -371,10 +378,10 @@ public class DisplayCCActivity extends AppCompatActivity {
                 dialogShow("欢迎充值", contactTip);
                 break;
             case R.id.tv_bottom_exchange:
-                dialogShow("兑换", contactTip);
+                dialogShow("兑换", contactTip2);
                 break;
             case R.id.tv_bottom_presented:
-                dialogShow("兑换", contactTip);
+                dialogShow("赠送", contactTip3);
 
 //                startActivity(new Intent(this,PersentActivity.class));
                 break;
