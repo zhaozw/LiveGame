@@ -103,9 +103,10 @@ public class DisplayCCActivity extends AppCompatActivity {
     private NiftyDialogBuilder dialogBuilder;
     private CountDownTimer betCountDown;
     private CountDownTimer resultCountDown;
-    private String contactTip="请联系QQ:346920463";
-    private String contactTip2="请联系QQ:346920463";
-    private String contactTip3="请联系QQ:346920463";
+    private String contactTip = "请联系QQ:346920463";
+    private String contactTip2 = "请联系QQ:346920463";
+    private String contactTip3 = "请联系QQ:346920463";
+    Boolean isFirstUse = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +128,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                 ftv_tip.setText(object.getTodayTip());
                 contactTip = object.getContactTip();
                 contactTip2 = object.getContactTip2();
-                contactTip3= object.getContactTip3();
+                contactTip3 = object.getContactTip3();
             }
 
             @Override
@@ -163,7 +164,6 @@ public class DisplayCCActivity extends AppCompatActivity {
                 initTotalDirection();//TODO 新增 这儿之前做掉了
                 LongConnectListener();
 
-
                 clearAllCountDown();
                 switch (currentGameBean.getState()) {
                     case 0://空闲状态不能下注
@@ -172,8 +172,14 @@ public class DisplayCCActivity extends AppCompatActivity {
                         break;
 
                     case 1://下注状态
-                        tv_indicator.setText("下注时间");
-                        startBetCountDown();
+                        if (isFirstUse) {
+                            tv_indicator.setText("空闲状态");
+                            tv_indicator_Time.setText("-");
+                        }else{
+                            tv_indicator.setText("下注时间");
+                            startBetCountDown();
+                        }
+                        isFirstUse=false;
                         break;
 
                     case 2://等待开奖中  开奖倒计时
@@ -292,7 +298,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                             break;
                     }
 
-                    Logger.d("开奖结果: " + lotteryResult );
+                    Logger.d("开奖结果: " + lotteryResult);
                     dialogShow("开奖", "开奖结果: " + lotteryResult);
                     tv_indicator.setText("开奖结果");
                     tv_indicator_Time.setText("" + lotteryResult);
