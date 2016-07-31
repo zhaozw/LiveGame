@@ -175,6 +175,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                         if (isFirstUse) {
                             tv_indicator.setText("空闲状态");
                             tv_indicator_Time.setText("-");
+                            currentGameBean.setState(0);
                         }else{
                             tv_indicator.setText("下注时间");
                             startBetCountDown();
