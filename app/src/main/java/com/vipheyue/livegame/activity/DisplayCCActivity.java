@@ -404,7 +404,7 @@ public class DisplayCCActivity extends AppCompatActivity {
      * 按下方位按钮 并更新用户金币(这里需要检查用户金币数)
      **/
 
-    private void pressDirection(String direction) {
+    private void pressDirection(final String direction) {
         if (currentGameBean.getState() != 1) {//如果不是下注时间就return;
             return;
         }
@@ -414,40 +414,51 @@ public class DisplayCCActivity extends AppCompatActivity {
                     break;
                 }
                 currentGameBean.setTotalIn_dong(currentGameBean.getTotalIn_dong() + currentSelectAmount);//总额增加
-                direction_mIn_dong += currentSelectAmount;
-                tv_dong_Mytotal.setText(direction_mIn_dong + "");
                 break;
             case "nan":
                 if (checkSystemMoney(direction_mIn_nan)) {
                     break;
                 }
                 currentGameBean.setTotalIn_nan(currentGameBean.getTotalIn_nan() + currentSelectAmount);
-                direction_mIn_nan += currentSelectAmount;
-                tv_nan_Mytotal.setText(direction_mIn_nan + "");
                 break;
             case "xi":
                 if (checkSystemMoney(direction_mIn_xi)) {
                     break;
                 }
                 currentGameBean.setTotalIn_xi(currentGameBean.getTotalIn_xi() + currentSelectAmount);
-                direction_mIn_xi += currentSelectAmount;
-                tv_xi_Mytotal.setText(direction_mIn_xi + "");
                 break;
             case "bei":
                 if (checkSystemMoney(direction_mIn_bei)) {
                     break;
                 }
                 currentGameBean.setTotalIn_bei(currentGameBean.getTotalIn_bei() + currentSelectAmount);
-                direction_mIn_bei += currentSelectAmount;
-                tv_bei_Mytotal.setText(direction_mIn_bei + "");
                 break;
+
         }
 
         //上传数据 total 实时更新GameBean
         currentGameBean.update(this, new UpdateListener() {
             @Override
             public void onSuccess() {
-//                Toast.makeText(DisplayCCActivity.this, "currentGameBean上传到服务器成功", Toast.LENGTH_SHORT).show();
+                switch (direction) {
+                    case "dong":
+                        direction_mIn_dong += currentSelectAmount;
+                        tv_dong_Mytotal.setText(direction_mIn_dong + "");
+                        break;
+                    case "nan":
+                        direction_mIn_nan += currentSelectAmount;
+                        tv_nan_Mytotal.setText(direction_mIn_nan + "");
+                        break;
+                    case "xi":
+                        direction_mIn_xi += currentSelectAmount;
+                        tv_xi_Mytotal.setText(direction_mIn_xi + "");
+                        break;
+                    case "bei":
+                         direction_mIn_bei += currentSelectAmount;
+                        tv_bei_Mytotal.setText(direction_mIn_bei + "");
+                        break;
+
+                }
             }
 
             @Override
