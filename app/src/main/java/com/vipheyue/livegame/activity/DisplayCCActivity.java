@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.jakewharton.rxbinding.view.RxView;
 import com.orhanobut.logger.Logger;
 import com.vipheyue.livegame.R;
 import com.vipheyue.livegame.bean.ConnectData;
@@ -23,6 +24,7 @@ import com.vipheyue.livegame.utils.GsonUtils;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +36,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
+import rx.functions.Action1;
 
 
 public class DisplayCCActivity extends AppCompatActivity {
@@ -117,7 +120,9 @@ public class DisplayCCActivity extends AppCompatActivity {
         queryTodayTip();
         updateAccount();
         getLatestGameBean();
+        setClickListener();
     }
+
 
     private void queryTodayTip() {
         BmobQuery<ContactBean> query = new BmobQuery<ContactBean>();
@@ -176,11 +181,11 @@ public class DisplayCCActivity extends AppCompatActivity {
                             tv_indicator.setText("空闲状态");
                             tv_indicator_Time.setText("-");
                             currentGameBean.setState(0);
-                        }else{
+                        } else {
                             tv_indicator.setText("下注时间");
                             startBetCountDown();
                         }
-                        isFirstUse=false;
+                        isFirstUse = false;
                         break;
 
                     case 2://等待开奖中  开奖倒计时
@@ -243,6 +248,7 @@ public class DisplayCCActivity extends AppCompatActivity {
             public void onFinish() {
                 tv_indicator.setText("开奖时间");
                 currentGameBean.setState(2);//进入等待开奖
+                currentGameBean.update(DisplayCCActivity.this);
                 waitResultCountDown();
             }
         };
@@ -354,21 +360,40 @@ public class DisplayCCActivity extends AppCompatActivity {
         tv_bei_Mytotal.setText(direction_mIn_bei + "");
     }
 
-    @OnClick({R.id.iv_direction_dong, R.id.iv_direction_nan, R.id.iv_direction_xi, R.id.iv_direction_bei, R.id.main_amount_10, R.id.main_amount_100, R.id.main_amount_50, R.id.main_amount_500, R.id.tv_bottom_recharge, R.id.tv_bottom_exchange, R.id.tv_bottom_presented, R.id.tv_bottom_out})
+    private void setClickListener() {
+        RxView.clicks(iv_direction_dong).throttleFirst(2, TimeUnit.SECONDS) // 以 Observable 形式来反馈点击事件
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void o) {
+                        pressDirection("dong");
+                    }
+                });
+        RxView.clicks(iv_direction_nan).throttleFirst(2, TimeUnit.SECONDS) // 以 Observable 形式来反馈点击事件
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void o) {
+                        pressDirection("nan");
+                    }
+                });
+        RxView.clicks(iv_direction_xi).throttleFirst(2, TimeUnit.SECONDS) // 以 Observable 形式来反馈点击事件
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void o) {
+                        pressDirection("xi");
+                    }
+                });
+        RxView.clicks(iv_direction_bei).throttleFirst(2, TimeUnit.SECONDS) // 以 Observable 形式来反馈点击事件
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void o) {
+                        pressDirection("bei");
+                    }
+                });
+    }
+
+    @OnClick({R.id.main_amount_10, R.id.main_amount_100, R.id.main_amount_50, R.id.main_amount_500, R.id.tv_bottom_recharge, R.id.tv_bottom_exchange, R.id.tv_bottom_presented, R.id.tv_bottom_out})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_direction_dong:
-                pressDirection("dong");
-                break;
-            case R.id.iv_direction_nan:
-                pressDirection("nan");
-                break;
-            case R.id.iv_direction_xi:
-                pressDirection("xi");
-                break;
-            case R.id.iv_direction_bei:
-                pressDirection("bei");
-                break;
             case R.id.main_amount_10:
                 selectAmount(10);
                 break;
@@ -408,6 +433,8 @@ public class DisplayCCActivity extends AppCompatActivity {
         if (currentGameBean.getState() != 1) {//如果不是下注时间就return;
             return;
         }
+
+
         switch (direction) {
             case "dong":
                 if (checkSystemMoney(direction_mIn_dong)) {
@@ -454,7 +481,7 @@ public class DisplayCCActivity extends AppCompatActivity {
                         tv_xi_Mytotal.setText(direction_mIn_xi + "");
                         break;
                     case "bei":
-                         direction_mIn_bei += currentSelectAmount;
+                        direction_mIn_bei += currentSelectAmount;
                         tv_bei_Mytotal.setText(direction_mIn_bei + "");
                         break;
 
