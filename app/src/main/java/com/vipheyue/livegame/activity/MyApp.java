@@ -20,8 +20,8 @@ public class MyApp extends Application {
         super.onCreate();
         instance=this;
 //        Bmob.initialize(this,helloFromCBM());//正式环境
-        Bmob.initialize(this,"e64952ec5a041da32b1c23568730fc4d");//开发环境
-        // 使用推送服务时的初始化操作
+      Bmob.initialize(this,"e64952ec5a041da32b1c23568730fc4d");//开发环境
+          // 使用推送服务时的初始化操作
         BmobInstallation.getCurrentInstallation(this).save();
         Logger.init("LiveGame");
 
