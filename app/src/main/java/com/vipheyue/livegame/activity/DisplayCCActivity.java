@@ -433,30 +433,28 @@ public class DisplayCCActivity extends AppCompatActivity {
         if (currentGameBean.getState() != 1) {//如果不是下注时间就return;
             return;
         }
-
-
         switch (direction) {
             case "dong":
-                if (checkSystemMoney(direction_mIn_dong)) {
-                    break;
+                if (checkSystemMoney(currentGameBean.getTotalIn_dong())) {
+                    return;
                 }
                 currentGameBean.setTotalIn_dong(currentGameBean.getTotalIn_dong() + currentSelectAmount);//总额增加
                 break;
             case "nan":
-                if (checkSystemMoney(direction_mIn_nan)) {
-                    break;
+                if (checkSystemMoney(currentGameBean.getTotalIn_nan())) {
+                    return;
                 }
                 currentGameBean.setTotalIn_nan(currentGameBean.getTotalIn_nan() + currentSelectAmount);
                 break;
             case "xi":
-                if (checkSystemMoney(direction_mIn_xi)) {
-                    break;
+                if (checkSystemMoney(currentGameBean.getTotalIn_xi())) {
+                    return;
                 }
                 currentGameBean.setTotalIn_xi(currentGameBean.getTotalIn_xi() + currentSelectAmount);
                 break;
             case "bei":
-                if (checkSystemMoney(direction_mIn_bei)) {
-                    break;
+                if (checkSystemMoney(currentGameBean.getTotalIn_bei())) {
+                    return;
                 }
                 currentGameBean.setTotalIn_bei(currentGameBean.getTotalIn_bei() + currentSelectAmount);
                 break;
